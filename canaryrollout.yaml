@@ -12,6 +12,8 @@ spec:
       release: canary
   strategy:
     canary:
+      canaryService: canary-preview
+      stableService: canary
       steps:
       - setWeight: 10
       # Rollouts can be manually resumed by running `kubectl argo rollouts promote ROLLOUT`
