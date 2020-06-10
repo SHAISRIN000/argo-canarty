@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: canary
+  namespace: default
+spec:
+  replicas: 5
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: canary
+      release: canary
+  strategy:
+    canary:
+      steps:
+      - setWeight: 10
+      # Rollouts can be manually resumed by running `kubectl argo rollouts promote ROLLOUT`
+      - pause: {}
+      - setWeight: 50
+      - pause: { duration: 120 } # two minutes      
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: canary
+        release: canary
+    spec:
+      containers:
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        name: canary
+        ports:
+        - containerPort: 80
+          name: http
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        resources: {}
