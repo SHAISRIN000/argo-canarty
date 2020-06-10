@@ -11,6 +11,6 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app:canary
+    app: canary
   sessionAffinity: None
   type: ClusterIP
